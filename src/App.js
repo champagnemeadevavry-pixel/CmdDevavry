@@ -9,10 +9,10 @@ const DEMO_PRODUCTS = [
     { id: "p5", name: "Millésime 2016", price: 30.0, image: "/Picture/2016.png" },
     { id: "p6", name: "BBGC 2019", price: 35.0, image: "/Picture/BBGC.png" },
     { id: "p7", name: "Monogram - Millésime 2018", price: 50.0, image: "/Picture/Monogram-2019.png" },
-    { id: "p8", name: "Millésime 1998", price: 100.0, image: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=400" },
-    { id: "p9", name: "Millésime 1989", price: 130.0, image: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=400" },
-    { id: "p10", name: "Millésime 1982", price: 180.0, image: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=400" },
-    { id: "p11", name: "Visite", price: 25.0, image: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=400" },
+    { id: "p8", name: "Millésime 1998", price: 100.0, image: "/Picture/1998.png" },
+    { id: "p9", name: "Millésime 1989", price: 130.0, image: "/Picture/1989.png" },
+    { id: "p10", name: "Millésime 1982", price: 180.0, image: "/Picture/1982.png" },
+    { id: "p11", name: "Visite", price: 25.0, image: "/Picture/Visites.png" },
 ];
 const currency = new Intl.NumberFormat("fr-FR", {
     style: "currency",
@@ -145,41 +145,41 @@ export default function App() {
         }
         alert("Email envoyé avec la commande en pièce jointe ✅");
     }
-    return (_jsxs("div", Object.assign({ style: { fontFamily: "system-ui", padding: 20 } }, { children: [_jsx("h1", { children: "Prise de commandes" }, void 0), _jsx("div", Object.assign({ style: {
+    return (_jsxs("div", { style: { fontFamily: "system-ui", padding: 20 }, children: [_jsx("h1", { children: "Prise de commandes" }), _jsx("div", { style: {
                     display: "grid",
                     gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
                     gap: 16,
-                } }, { children: products.map((p) => {
+                }, children: products.map((p) => {
                     const isExpanded = expandedId === p.id;
                     const localQty = qtyById[p.id] ?? 1;
-                    return (_jsxs("div", Object.assign({ style: {
+                    return (_jsxs("div", { style: {
                             border: "1px solid #ddd",
                             borderRadius: 8,
                             padding: 8,
                             background: "#fff",
-                        } }, { children: [_jsx("img", { src: p.image, alt: p.name, style: {
+                        }, children: [_jsx("img", { src: p.image, alt: p.name, style: {
                                     width: "100%",
                                     height: "auto",
                                     maxHeight: 250,
                                     objectFit: "contain",
-                                } }, void 0), _jsx("div", Object.assign({ style: { fontWeight: 600 } }, { children: p.name }), void 0), _jsx("div", { children: currency.format(p.price) }, void 0), !isExpanded ? (_jsx("button", Object.assign({ style: { marginTop: 8 }, onClick: () => {
+                                } }), _jsx("div", { style: { fontWeight: 600 }, children: p.name }), _jsx("div", { children: currency.format(p.price) }), !isExpanded ? (_jsx("button", { style: { marginTop: 8 }, onClick: () => {
                                     setExpandedId(p.id);
                                     setQtyById((prev) => ({ ...prev, [p.id]: 1 }));
-                                } }, { children: "Ajouter" }), void 0)) : (_jsxs("div", Object.assign({ style: { marginTop: 8 } }, { children: [_jsxs("div", Object.assign({ style: { display: "flex", gap: 8, alignItems: "center" } }, { children: [_jsx("button", Object.assign({ onClick: () => setQtyById((prev) => ({
+                                }, children: "Ajouter" })) : (_jsxs("div", { style: { marginTop: 8 }, children: [_jsxs("div", { style: { display: "flex", gap: 8, alignItems: "center" }, children: [_jsx("button", { onClick: () => setQtyById((prev) => ({
                                                     ...prev,
                                                     [p.id]: Math.max(1, (prev[p.id] ?? 1) - 1),
-                                                })) }, { children: "\u2212" }), void 0), _jsx("input", { type: "number", value: localQty, min: 1, onChange: (e) => {
+                                                })), children: "\u2212" }), _jsx("input", { type: "number", value: localQty, min: 1, onChange: (e) => {
                                                     const v = Number(e.target.value);
                                                     setQtyById((prev) => ({
                                                         ...prev,
                                                         [p.id]: Number.isFinite(v) && v >= 1 ? v : 1,
                                                     }));
-                                                }, style: { width: 64, textAlign: "center" } }, void 0), _jsx("button", Object.assign({ onClick: () => setQtyById((prev) => ({
+                                                }, style: { width: 64, textAlign: "center" } }), _jsx("button", { onClick: () => setQtyById((prev) => ({
                                                     ...prev,
                                                     [p.id]: (prev[p.id] ?? 1) + 1,
-                                                })) }, { children: "+" }), void 0), _jsxs("div", Object.assign({ style: { marginLeft: "auto" } }, { children: ["Sous-total : ", currency.format(p.price * localQty)] }), void 0)] }), void 0), _jsxs("div", Object.assign({ style: { display: "flex", gap: 8, marginTop: 8 } }, { children: [_jsx("button", Object.assign({ style: { flex: 1 }, onClick: () => {
+                                                })), children: "+" }), _jsxs("div", { style: { marginLeft: "auto" }, children: ["Sous-total : ", currency.format(p.price * localQty)] })] }), _jsxs("div", { style: { display: "flex", gap: 8, marginTop: 8 }, children: [_jsx("button", { style: { flex: 1 }, onClick: () => {
                                                     addToCart(p, localQty);
                                                     setExpandedId(null);
-                                                } }, { children: "Confirmer" }), void 0), _jsx("button", Object.assign({ style: { flex: 1 }, onClick: () => setExpandedId(null) }, { children: "Annuler" }), void 0)] }), void 0)] }), void 0))] }), p.id));
-                }) }), void 0), _jsx("h2", Object.assign({ style: { marginTop: 30 } }, { children: "Panier" }), void 0), Object.values(cart).length === 0 && _jsx("p", { children: "Aucun article." }, void 0), Object.values(cart).map((it) => (_jsxs("div", Object.assign({ style: { display: "flex", gap: 8, alignItems: "center" } }, { children: [_jsxs("span", { children: [it.qty, " \u00D7 ", it.product.name] }, void 0), _jsx("span", Object.assign({ style: { marginLeft: "auto" } }, { children: currency.format(it.product.price * it.qty) }), void 0), _jsx("button", Object.assign({ onClick: () => setItemQty(it.product.id, it.qty - 1) }, { children: "\u2212" }), void 0), _jsx("button", Object.assign({ onClick: () => setItemQty(it.product.id, it.qty + 1) }, { children: "+" }), void 0)] }), it.product.id))), Object.values(cart).length > 0 && (_jsxs("div", Object.assign({ style: { marginTop: 20 } }, { children: [_jsxs("strong", { children: ["Total : ", totalQty, " article(s) \u2014 ", currency.format(total)] }, void 0), _jsxs("div", Object.assign({ style: { display: "flex", gap: 8, marginTop: 8 } }, { children: [_jsx("button", Object.assign({ onClick: clearCart }, { children: "Vider" }), void 0), _jsx("button", Object.assign({ onClick: () => exportCartToExcel(cart) }, { children: "Exporter Excel" }), void 0), _jsx("button", Object.assign({ onClick: () => sendExcelByEmail(cart) }, { children: "Envoyer par email" }), void 0)] }), void 0)] }), void 0))] }), void 0));
+                                                }, children: "Confirmer" }), _jsx("button", { style: { flex: 1 }, onClick: () => setExpandedId(null), children: "Annuler" })] })] }))] }, p.id));
+                }) }), _jsx("h2", { style: { marginTop: 30 }, children: "Panier" }), Object.values(cart).length === 0 && _jsx("p", { children: "Aucun article." }), Object.values(cart).map((it) => (_jsxs("div", { style: { display: "flex", gap: 8, alignItems: "center" }, children: [_jsxs("span", { children: [it.qty, " \u00D7 ", it.product.name] }), _jsx("span", { style: { marginLeft: "auto" }, children: currency.format(it.product.price * it.qty) }), _jsx("button", { onClick: () => setItemQty(it.product.id, it.qty - 1), children: "\u2212" }), _jsx("button", { onClick: () => setItemQty(it.product.id, it.qty + 1), children: "+" })] }, it.product.id))), Object.values(cart).length > 0 && (_jsxs("div", { style: { marginTop: 20 }, children: [_jsxs("strong", { children: ["Total : ", totalQty, " article(s) \u2014 ", currency.format(total)] }), _jsxs("div", { style: { display: "flex", gap: 8, marginTop: 8 }, children: [_jsx("button", { onClick: clearCart, children: "Vider" }), _jsx("button", { onClick: () => exportCartToExcel(cart), children: "Exporter Excel" }), _jsx("button", { onClick: () => sendExcelByEmail(cart), children: "Envoyer par email" })] })] }))] }));
 }

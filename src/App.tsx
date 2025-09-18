@@ -21,10 +21,10 @@ const DEMO_PRODUCTS: Product[] = [
   { id: "p5",  name: "Millésime 2016",              price: 30.0,  image: "/Picture/2016.png" },
   { id: "p6",  name: "BBGC 2019",                   price: 35.0,  image: "/Picture/BBGC.png" },
   { id: "p7",  name: "Monogram - Millésime 2018",   price: 50.0,  image: "/Picture/Monogram-2019.png" },
-  { id: "p8",  name: "Millésime 1998",              price: 100.0, image: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=400" },
-  { id: "p9",  name: "Millésime 1989",              price: 130.0, image: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=400" },
-  { id: "p10", name: "Millésime 1982",              price: 180.0, image: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=400" },
-  { id: "p11", name: "Visite",                      price: 25.0,  image: "https://images.unsplash.com/photo-1517705008128-361805f42e86?w=400" },
+  { id: "p8",  name: "Millésime 1998",              price: 100.0, image: "/Picture/1998.png" },
+  { id: "p9",  name: "Millésime 1989",              price: 130.0, image: "/Picture/1989.png" },
+  { id: "p10", name: "Millésime 1982",              price: 180.0, image: "/Picture/1982.png" },
+  { id: "p11", name: "Visite",                      price: 25.0,  image: "/Picture/Visites.png" },
 ];
 
 const currency = new Intl.NumberFormat("fr-FR", {

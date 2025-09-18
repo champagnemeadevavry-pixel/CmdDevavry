@@ -5,4 +5,4 @@ import App from "./App"; // <-- import par défaut
 const el = document.getElementById("root");
 if (!el)
     throw new Error('No root element found');
-createRoot(el).render(_jsx(React.StrictMode, { children: _jsx(App, {}, void 0) }, void 0));
+createRoot(el).render(_jsx(React.StrictMode, { children: _jsx(App, {}) }));
