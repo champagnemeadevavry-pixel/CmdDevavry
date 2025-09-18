@@ -11,16 +11,10 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
 
-    /* ✅ Types nécessaires */
     "types": ["node", "@netlify/functions"],
 
-    /* Optionnel : alias @/ -> src */
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "paths": { "@/*": ["src/*"] }
   },
-
-  /* ✅ Inclure le code React et les fonctions Netlify */
   "include": ["src", "netlify/functions"]
 }

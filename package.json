@@ -25,11 +25,11 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.6"
   },
-  "scripts": {
-    "dev": "vite",
-    "build": "cross-env ROLLUP_SKIP_NODEJS_NATIVE=true tsc && cross-env ROLLUP_SKIP_NODEJS_NATIVE=true vite build",
-    "preview": "vite preview"
-  },
+ "scripts": {
+  "dev": "vite",
+  "build": "cross-env ROLLUP_SKIP_NODEJS_NATIVE=true tsc && cross-env ROLLUP_SKIP_NODEJS_NATIVE=true vite build",
+  "preview": "vite preview"
+},
   "browserslist": [
     ">0.2%",
     "not dead",

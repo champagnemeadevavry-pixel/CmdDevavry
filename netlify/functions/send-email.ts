@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // netlify/functions/send-email.ts
 import type { Handler } from "@netlify/functions";
 import * as emailjs from "@emailjs/nodejs";
