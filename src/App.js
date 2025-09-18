@@ -71,10 +71,10 @@ export default function App() {
         }));
         const total = items.reduce((s, it) => s + it.product.price * it.qty, 0);
         rows.push({
-            "#": "",
+            "#": 0,
             Produit: "TOTAL",
-            Quantité: "",
-            "Prix unitaire TTC (€)": "",
+            Quantité: 0,
+            "Prix unitaire TTC (€)": 0,
             "Sous-total TTC (€)": Number(total.toFixed(2))
         });
         const wb = XLSX.utils.book_new();
@@ -99,10 +99,10 @@ export default function App() {
         }));
         const total = items.reduce((s, it) => s + it.product.price * it.qty, 0);
         rows.push({
-            "#": "",
+            "#": 0,
             Produit: "TOTAL",
-            Quantité: "",
-            "Prix unitaire TTC (€)": "",
+            Quantité: 0,
+            "Prix unitaire TTC (€)": 0,
             "Sous-total TTC (€)": Number(total.toFixed(2))
         });
         const wb = XLSX.utils.book_new();

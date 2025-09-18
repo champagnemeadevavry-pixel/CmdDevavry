@@ -11,15 +11,16 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
 
-    /* ✅ Ajouts utiles pour Netlify Functions */
-    "types": ["@netlify/functions"],
+    /* ✅ Types nécessaires */
+    "types": ["node", "@netlify/functions"],
 
-    /* Optionnel mais pratique si tu importes depuis ces dossiers */
+    /* Optionnel : alias @/ -> src */
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  /* ✅ Assure-toi que les fonctions sont bien compilées/typées aussi */
+
+  /* ✅ Inclure le code React et les fonctions Netlify */
   "include": ["src", "netlify/functions"]
 }
