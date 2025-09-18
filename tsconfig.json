@@ -1,13 +1,25 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "lib": ["DOM", "ES2020"],
-    "jsx": "react-jsx",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "strict": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "resolveJsonModule": true,
+
+    /* ✅ Ajouts utiles pour Netlify Functions */
+    "types": ["@netlify/functions"],
+
+    /* Optionnel mais pratique si tu importes depuis ces dossiers */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["src"]
+  /* ✅ Assure-toi que les fonctions sont bien compilées/typées aussi */
+  "include": ["src", "netlify/functions"]
 }
