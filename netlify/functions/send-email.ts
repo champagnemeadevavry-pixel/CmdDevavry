@@ -1,5 +1,5 @@
 import type { Handler } from "@netlify/functions";
-import emailjs from "@emailjs/nodejs";
+import * as emailjs from "@emailjs/nodejs";
 
 export const handler: Handler = async (event) => {
   try {
@@ -9,24 +9,24 @@ export const handler: Handler = async (event) => {
       return { statusCode: 400, body: "Champs manquants" };
     }
 
-    // Récupération des variables d'environnement Netlify
     const serviceID = process.env.EMAILJS_SERVICE_ID!;
-    const templateID = process.env.EMAILJS_TEMPLATE_ID!;
+    const templateID = process.env.EMAILJS_TEMPLATE_ID!; // = template_2vhncdl
     const publicKey = process.env.EMAILJS_PUBLIC_KEY!;
-    const privateKey = process.env.EMAILJS_PRIVATE_KEY; // optionnel mais recommandé côté serveur
+    const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
-    // Envoi via EmailJS
     const response = await emailjs.send(
       serviceID,
       templateID,
       {
-        to_email: to,
-        subject,
+        to_email: to,   // doit exister dans le template
+        subject,        // idem
         message: "Commande ci-jointe",
         attachment: {
           name: filename,
-          data: `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${contentBase64}`
-        }
+          data:
+            "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," +
+            contentBase64,
+        },
       },
       { publicKey, privateKey }
     );
