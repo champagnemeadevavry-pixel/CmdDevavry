@@ -20,10 +20,7 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.6"
   },
-  "overrides": {
-    "@rollup/rollup-linux-x64-gnu": "npm:@rollup/rollup-win32-x64-msvc@^4.52.3",
-    "@rollup/rollup-linux-x64-musl": "npm:@rollup/rollup-win32-x64-msvc@^4.52.3"
-  },
+ 
   "scripts": {
     "dev": "vite",
     "build": "cross-env ROLLUP_SKIP_NODEJS_NATIVE=true vite build",
