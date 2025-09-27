@@ -26,8 +26,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "cross-env ROLLUP_SKIP_NODEJS_NATIVE=true tsc && cross-env ROLLUP_SKIP_NODEJS_NATIVE=true vite build",
+    "build": "cross-env ROLLUP_SKIP_NODEJS_NATIVE=true vite build",
     "preview": "vite preview"
   },
   "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
 }
+
