@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 interface Product {
   id: string;
   name: string;
-  price: number;
+  price: number; // TTC
   image: string;
 }
 
@@ -36,6 +36,7 @@ const currency = new Intl.NumberFormat("fr-FR", {
 export default function App() {
   const [products] = useState<Product[]>(DEMO_PRODUCTS);
   const [cart, setCart] = useState<Record<string, CartItem>>({});
+  const [sending, setSending] = useState(false);
 
   // Charger depuis localStorage
   useEffect(() => {
@@ -53,6 +54,11 @@ export default function App() {
     [cart]
   );
 
+  const totalQty = useMemo(
+    () => Object.values(cart).reduce((s, it) => s + it.qty, 0),
+    [cart]
+  );
+
   function addToCart(product: Product, qty: number) {
     setCart((prev) => {
       const existing = prev[product.id];
@@ -65,70 +71,103 @@ export default function App() {
     setCart({});
   }
 
-  // ✅ Export local
-  function exportCartToExcel() {
+  // ---------- Génération Excel (base64) ----------
+  function cartToExcelBase64(cart: Record<string, CartItem>): { base64: string; filename: string } | null {
     const items = Object.values(cart);
-    if (!items.length) return;
+    if (!items.length) return null;
 
     const rows = items.map((it, i) => ({
       "#": i + 1,
       Produit: it.product.name,
       Quantité: it.qty,
-      "Prix unitaire TTC (€)": it.product.price,
-      "Sous-total TTC (€)": it.product.price * it.qty,
+      "Prix unitaire TTC (€)": Number(it.product.price.toFixed(2)),
+      "Sous-total TTC (€)": Number((it.product.price * it.qty).toFixed(2)),
     }));
+
+    const total = items.reduce((s, it) => s + it.product.price * it.qty, 0);
+    rows.push({
+      "#": "" as any,
+      Produit: "TOTAL",
+      Quantité: "" as any,
+      "Prix unitaire TTC (€)": "" as any,
+      "Sous-total TTC (€)": Number(total.toFixed(2)),
+    });
 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(rows);
+    // largeur colonnes (optionnel)
+    (ws as any)["!cols"] = [{ wch: 4 }, { wch: 28 }, { wch: 10 }, { wch: 20 }, { wch: 20 }];
     XLSX.utils.book_append_sheet(wb, ws, "Commande");
 
     const date = new Date().toISOString().slice(0, 10);
-    XLSX.writeFile(wb, `commande_${date}.xlsx`);
+    const filename = `commande_${date}.xlsx`;
+    const base64 = XLSX.write(wb, { bookType: "xlsx", type: "base64" });
+    return { base64, filename };
   }
 
-  // ✅ Envoi Email via Netlify Function
-  async function sendExcelByEmail() {
+  // ---------- Export local (téléchargement) ----------
+  function exportCartToExcel() {
+    const payload = cartToExcelBase64(cart);
+    if (!payload) return;
+    // On régénère le fichier pour téléchargement local
     const items = Object.values(cart);
-    if (!items.length) {
+    const rows = items.map((it, i) => ({
+      "#": i + 1,
+      Produit: it.product.name,
+      Quantité: it.qty,
+      "Prix unitaire TTC (€)": Number(it.product.price.toFixed(2)),
+      "Sous-total TTC (€)": Number((it.product.price * it.qty).toFixed(2)),
+    }));
+    const total = items.reduce((s, it) => s + it.product.price * it.qty, 0);
+    rows.push({
+      "#": "" as any,
+      Produit: "TOTAL",
+      Quantité: "" as any,
+      "Prix unitaire TTC (€)": "" as any,
+      "Sous-total TTC (€)": Number(total.toFixed(2)),
+    });
+
+    const wb2 = XLSX.utils.book_new();
+    const ws2 = XLSX.utils.json_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb2, ws2, "Commande");
+    XLSX.writeFile(wb2, payload.filename);
+  }
+
+  // ---------- Envoi Email via Netlify Function ----------
+  async function sendExcelByEmail() {
+    const payload = cartToExcelBase64(cart);
+    if (!payload) {
       alert("Panier vide");
       return;
     }
+    const { base64, filename } = payload;
 
-    // Générer Excel en base64
-    const rows = items.map((it, i) => ({
-      "#": i + 1,
-      Produit: it.product.name,
-      Quantité: it.qty,
-      "Prix unitaire TTC (€)": it.product.price,
-      "Sous-total TTC (€)": it.product.price * it.qty,
-    }));
+    setSending(true);
+    try {
+      const res = await fetch("/.netlify/functions/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: "champagnemeadevavry@gmail.com",
+          subject: `Nouvelle commande (${totalQty} article(s)) – Total ${currency.format(total)}`,
+          filename,
+          contentBase64: base64,
+          message: `Commande du ${new Date().toLocaleDateString("fr-FR")}.\nTotal TTC: ${currency.format(total)}.\nNombre d'articles: ${totalQty}.`,
+        }),
+      });
 
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(rows);
-    XLSX.utils.book_append_sheet(wb, ws, "Commande");
+      if (!res.ok) {
+        const msg = await res.text();
+        alert("❌ Erreur lors de l'envoi : " + msg);
+        return;
+      }
 
-    const base64Excel = XLSX.write(wb, { bookType: "xlsx", type: "base64" });
-    const date = new Date().toISOString().slice(0, 10);
-
-    // Appel vers Netlify
-    const res = await fetch("/.netlify/functions/send-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        to: "champagnemeadevavry@gmail.com",
-        subject: `Nouvelle commande - ${new Date().toLocaleDateString("fr-FR")}`,
-        filename: `commande_${date}.xlsx`,
-        contentBase64: base64Excel,
-        message: "Détails de la commande en pièce jointe.",
-      }),
-    });
-
-    if (!res.ok) {
-      const msg = await res.text();
-      alert("❌ Erreur lors de l'envoi : " + msg);
-      return;
+      alert("✅ Email envoyé avec la commande en pièce jointe !");
+      // Option : vider le panier après envoi
+      // clearCart();
+    } finally {
+      setSending(false);
     }
-    alert("✅ Email envoyé avec succès !");
   }
 
   return (
@@ -138,8 +177,15 @@ export default function App() {
       {/* Liste Produits */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
         {products.map((p) => (
-          <div key={p.id} style={{ border: "1px solid #ddd", padding: 8, borderRadius: 8, width: 180 }}>
-            <img src={p.image} alt={p.name} style={{ width: "100%", height: 120, objectFit: "contain" }} />
+          <div
+            key={p.id}
+            style={{ border: "1px solid #ddd", padding: 8, borderRadius: 8, width: 180 }}
+          >
+            <img
+              src={p.image}
+              alt={p.name}
+              style={{ width: "100%", height: 120, objectFit: "contain" }}
+            />
             <div style={{ fontWeight: "bold" }}>{p.name}</div>
             <div>{currency.format(p.price)}</div>
             <button onClick={() => addToCart(p, 1)} style={{ marginTop: 8 }}>
@@ -159,11 +205,17 @@ export default function App() {
 
       {Object.values(cart).length > 0 && (
         <div style={{ marginTop: 20 }}>
-          <strong>Total : {currency.format(total)}</strong>
-          <div style={{ marginTop: 10, display: "flex", gap: 10 }}>
+          <strong>
+            Total : {currency.format(total)} ({totalQty} article(s))
+          </strong>
+          <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button onClick={clearCart}>Vider</button>
             <button onClick={exportCartToExcel}>Exporter Excel</button>
-            <button onClick={sendExcelByEmail}>Envoyer par email</button>
+
+            {/* ✅ Bouton qui envoie automatiquement l'Excel par e-mail */}
+            <button onClick={sendExcelByEmail} disabled={sending}>
+              {sending ? "Envoi en cours..." : "Valider & envoyer"}
+            </button>
           </div>
         </div>
       )}

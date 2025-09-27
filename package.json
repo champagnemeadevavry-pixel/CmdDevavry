@@ -2,11 +2,7 @@
   "name": "react-typescript",
   "version": "1.0.0",
   "description": "React and TypeScript example starter project",
-  "keywords": [
-    "typescript",
-    "react",
-    "starter"
-  ],
+  "keywords": ["typescript", "react", "starter"],
   "main": "src/main.tsx",
   "dependencies": {
     "@emailjs/nodejs": "^5.0.2",
@@ -16,7 +12,6 @@
     "xlsx": "0.18.5"
   },
   "devDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.50.2",
     "@types/node": "^24.5.2",
     "@types/react": "^18.3.24",
     "@types/react-dom": "^18.3.7",
@@ -25,15 +20,14 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.6"
   },
- "scripts": {
-  "dev": "vite",
-  "build": "cross-env ROLLUP_SKIP_NODEJS_NATIVE=true tsc && cross-env ROLLUP_SKIP_NODEJS_NATIVE=true vite build",
-  "preview": "vite preview"
-},
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "overrides": {
+    "@rollup/rollup-linux-x64-gnu": "npm:@rollup/rollup-win32-x64-msvc@^4.52.3",
+    "@rollup/rollup-linux-x64-musl": "npm:@rollup/rollup-win32-x64-msvc@^4.52.3"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "cross-env ROLLUP_SKIP_NODEJS_NATIVE=true tsc && cross-env ROLLUP_SKIP_NODEJS_NATIVE=true vite build",
+    "preview": "vite preview"
+  },
+  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
 }
