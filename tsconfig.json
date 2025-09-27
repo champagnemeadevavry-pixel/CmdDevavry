@@ -13,7 +13,9 @@
 
     "types": ["vite/client", "node", "@netlify/functions"],
     "baseUrl": ".",
-    "paths": { "@/*": ["src/*"] }
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src", "netlify/functions"]
 }
