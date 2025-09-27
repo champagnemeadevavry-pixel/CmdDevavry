@@ -11,8 +11,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
 
-    "types": ["node", "@netlify/functions"],
-
+    "types": ["vite/client", "node", "@netlify/functions"],
     "baseUrl": ".",
     "paths": { "@/*": ["src/*"] }
   },
